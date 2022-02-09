@@ -92,13 +92,15 @@ class SalesDetails():
     def walk_in_folders(self):
         folders = os.listdir('Report')
         for folder in folders:
-            file = f'Report/{folder}/' + os.listdir('Report/' + folder)[0]
+            
+            file = f'Report/{folder}/' + 'Month_data.xlsx'
             self.find_penalties(folder=f'Report/{folder}', filename=file)
             self.find_logistic(folder=f'Report/{folder}', filename=file)
             self.find_sales_stock(folder=f'Report/{folder}', filename=file)
             self.find_refund(folder=f'Report/{folder}', filename=file)
     
     def find_penalties(self, folder, filename):
+        print(filename)
         table_reader = xlrd.open_workbook(filename)
         sheet_reader = table_reader.sheet_by_index(0)
 
@@ -109,7 +111,7 @@ class SalesDetails():
         
         penalties = [table_titles, ]
         for item in range(len(justifications_for_payment)):
-            if justifications_for_payment[item] == 'Штраф МП':
+            if justifications_for_payment[item] in ('Штраф', 'Штраф МП'):
                 penalties.append(sheet_reader.row_values(item))
         if len(penalties) > 1: 
             self.save_excel(f'{folder}/Penalties.xlsx', penalties)
